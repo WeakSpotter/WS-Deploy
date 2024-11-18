@@ -16,3 +16,6 @@ spec:
         - name: frontend
           ports:
             - containerPort: 80
+          env:
+            - name: API_URL
+              value: http://localhost:8000/api
