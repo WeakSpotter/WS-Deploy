@@ -5,10 +5,10 @@ metadata:
   namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: >
-      frontend=ghcr.io/weakspotter/frontend:develop,
-      backend=ghcr.io/weakspotter/backend:develop
-    argocd-image-updater.argoproj.io/frontend.update-strategy: name
-    argocd-image-updater.argoproj.io/backend.update-strategy: name
+      frontend=ghcr.io/weakspotter/weakspotter-frontend:develop,
+      backend=ghcr.io/weakspotter/weakspotter-backend:develop
+    argocd-image-updater.argoproj.io/frontend.update-strategy: alphabetical
+    argocd-image-updater.argoproj.io/backend.update-strategy: alphabetical
 spec:
   project: default
   source:
