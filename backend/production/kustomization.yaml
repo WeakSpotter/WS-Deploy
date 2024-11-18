@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: weakspotter-production
+
+resources:
+  - ../base
+
+patches:
+  - target:
+      kind: Deployment
+      name: weakspotter-backend
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: ghcr.io/ozeliurs/weakspotter-backend:main
+  - target:
+      kind: Ingress
+      name: weakspotter-ingress
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: weakspotter.ozeliurs.com
+      - op: replace
+        path: /spec/tls/0/hosts
+        value:
+          - weakspotter.ozeliurs.com
+      - op: replace
+        path: /spec/tls/0/secretName
+        value: weakspotter-production-tls

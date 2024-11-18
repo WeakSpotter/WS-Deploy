@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: weakspotter-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: cloudflare-dns
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: weakspotter-backend
+                port:
+                  number: 8000
+  tls:
+    - secretName: weakspotter-tls
