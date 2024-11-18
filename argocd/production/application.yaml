@@ -3,10 +3,6 @@ kind: Application
 metadata:
   name: weakspotter-production
   namespace: argocd
-  annotations:
-    argocd-image-updater.argoproj.io/image-list: >
-      frontend=ghcr.io/weakspotter/frontend:main,
-      backend=ghcr.io/weakspotter/backend:main
 spec:
   project: default
   source:
