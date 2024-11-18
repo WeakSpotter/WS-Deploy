@@ -13,7 +13,7 @@ patches:
     patch: |-
       - op: replace
         path: /spec/template/spec/containers/0/image
-        value: ghcr.io/ozeliurs/weakspotter-frontend:develop
+        value: ghcr.io/weakspotter/weakspotter-frontend:develop
   - target:
       kind: Ingress
       name: weakspotter-ingress
