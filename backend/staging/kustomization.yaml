@@ -27,4 +27,4 @@ patches:
           - staging.weakspotter.ozeliurs.com
       - op: replace
         path: /spec/tls/0/secretName
-        value: weakspotter-staging-tls
+        value: weakspotter-backend-staging-tls
