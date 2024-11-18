@@ -16,7 +16,7 @@ patches:
         value: ghcr.io/weakspotter/weakspotter-backend:develop
   - target:
       kind: Ingress
-      name: weakspotter-ingress
+      name: weakspotter-backend-ingress
     patch: |-
       - op: replace
         path: /spec/rules/0/host
