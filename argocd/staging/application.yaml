@@ -7,8 +7,8 @@ metadata:
     argocd-image-updater.argoproj.io/image-list: >
       frontend=ghcr.io/weakspotter/weakspotter-frontend:develop,
       backend=ghcr.io/weakspotter/weakspotter-backend:develop
-    argocd-image-updater.argoproj.io/frontend.update-strategy: alphabetical
-    argocd-image-updater.argoproj.io/backend.update-strategy: alphabetical
+    argocd-image-updater.argoproj.io/frontend.update-strategy: digest
+    argocd-image-updater.argoproj.io/backend.update-strategy: digest
 spec:
   project: default
   source:
