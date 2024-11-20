@@ -19,3 +19,5 @@ spec:
           env:
             - name: API_URL
               value: http://localhost:8000/api
+            - name: ENV
+              value: production

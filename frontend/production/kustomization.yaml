@@ -17,6 +17,9 @@ patches:
       - op: replace
         path: /spec/template/spec/containers/0/env/0/value
         value: https://weakspotter.ozeliurs.com/api
+      - op: replace
+        path: /spec/template/spec/containers/0/env/1/value
+        value: production
   - target:
       kind: Ingress
       name: weakspotter-frontend-ingress
