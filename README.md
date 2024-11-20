@@ -13,7 +13,8 @@ graph TD
         F -->|Uses| H[ghcr.io/weakspotter/weakspotter-frontend:develop]
         G -->|Uses| I[ghcr.io/weakspotter/weakspotter-backend:develop]
         F -->|API_URL| J[staging.weakspotter.ozeliurs.com/api]
-        G -->|Ingress| K[staging.weakspotter.ozeliurs.com]
+        F -->|Ingress| T[staging.weakspotter.ozeliurs.com]
+        G -->|Ingress| K[staging.weakspotter.ozeliurs.com/api]
     end
 
     subgraph Production Environment
@@ -23,7 +24,8 @@ graph TD
         M -->|Uses| O[ghcr.io/weakspotter/weakspotter-frontend:main]
         N -->|Uses| P[ghcr.io/weakspotter/weakspotter-backend:main]
         M -->|API_URL| Q[weakspotter.ozeliurs.com/api]
-        N -->|Ingress| R[weakspotter.ozeliurs.com]
+        M -->|Ingress| Z[weakspotter.ozeliurs.com]
+        N -->|Ingress| R[weakspotter.ozeliurs.com/api]
     end
 ```
 
