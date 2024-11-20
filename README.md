@@ -1,6 +1,6 @@
 ## Deployment Diagram
 
-````mermaid
+```mermaid
 graph TD
     A[ArgoCD] -->|Deploys| B[WeakSpotter-Kub/argocd]
     B -->|Includes| C[staging/application.yaml]
