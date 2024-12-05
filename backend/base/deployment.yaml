@@ -12,6 +12,7 @@ spec:
       labels:
         app: weakspotter-backend
     spec:
+      serviceAccountName: weakspotter-service-account
       containers:
         - name: backend
           ports:
