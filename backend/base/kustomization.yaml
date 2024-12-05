@@ -5,3 +5,6 @@ resources:
   - deployment.yaml
   - service.yaml
   - ingress.yaml
+  - service-account.yaml
+  - role.yaml
+  - rolebinding.yaml
