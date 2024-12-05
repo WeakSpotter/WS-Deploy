@@ -4,5 +4,5 @@ metadata:
   name: weakspotter-role
 rules:
   - apiGroups: [""]
-    resources: ["pods"]
+    resources: ["pods", "pods/status"]
     verbs: ["create", "get", "list", "watch", "delete"]
