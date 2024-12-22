@@ -4,3 +4,4 @@ namespace: argocd
 resources:
   - cmd-params-cm.yaml
   - ingress.yaml
+  - cm.yaml
