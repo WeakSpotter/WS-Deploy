@@ -19,3 +19,10 @@ spec:
           image: securecompliance/gvm:latest
           ports:
             - containerPort: 9392
+          volumeMounts:
+            - name: openvas-data
+              mountPath: /data
+      volumes:
+        - name: openvas-data
+          persistentVolumeClaim:
+            claimName: weakspotter-openvas-pvc
