@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: weakspotter-openvas
+  namespace: common
+
+spec:
+  ports:
+    - port: 9392
+      targetPort: 9392
+  selector:
+    app: weakspotter-openvas
+  type: ClusterIP

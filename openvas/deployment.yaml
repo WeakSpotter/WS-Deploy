@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weakspotter-openvas
+  namespace: common
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: weakspotter-openvas
+  template:
+    metadata:
+      labels:
+        app: weakspotter-openvas
+    spec:
+      containers:
+        - name: openvas
+          image: securecompliance/gvm:latest
+          ports:
+            - containerPort: 9392
