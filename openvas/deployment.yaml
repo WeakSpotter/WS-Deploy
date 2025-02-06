@@ -20,9 +20,24 @@ spec:
           ports:
             - containerPort: 9392
           volumeMounts:
-            - name: openvas-data
-              mountPath: /data
+            - name: postgres-db
+              mountPath: /opt/database
+            - name: openvas-plugins
+              mountPath: /var/lib/openvas/plugins
+            - name: gvm-data
+              mountPath: /var/lib/gvm
+            - name: ssh-config
+              mountPath: /etc/ssh
       volumes:
-        - name: openvas-data
-          persistentVolumeClaim:
-            claimName: weakspotter-openvas-pvc
+        - name: postgres-db
+          hostPath:
+            path: /mnt/appdata/openvas/postgres-db
+        - name: openvas-plugins
+          hostPath:
+            path: /mnt/appdata/openvas/openvas-plugins
+        - name: gvm-data
+          hostPath:
+            path: /mnt/appdata/openvas/gvm
+        - name: ssh-config
+          hostPath:
+            path: /mnt/appdata/openvas/ssh
