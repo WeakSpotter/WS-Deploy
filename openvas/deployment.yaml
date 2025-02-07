@@ -20,6 +20,8 @@ spec:
           resources:
             limits:
               cpu: "4"
+            requests:
+              cpu: "0"
           ports:
             - containerPort: 9392
           volumeMounts:
