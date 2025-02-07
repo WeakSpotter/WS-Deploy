@@ -17,6 +17,9 @@ spec:
       containers:
         - name: openvas
           image: securecompliance/gvm:latest
+          resources:
+            limits:
+              cpu: "4"
           ports:
             - containerPort: 9392
           volumeMounts:
