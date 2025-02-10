@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: weakspotter-common
 
 resources:
-  - deployment.yaml
-  - service.yaml
+  # - deployment.yaml
+  # - service.yaml
   - namespace.yaml
-  - ingress.yaml
+  # - ingress.yaml
