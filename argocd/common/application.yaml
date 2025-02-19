@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/WeakSpotter/WS-Deploy.git
     targetRevision: HEAD
-    path: argocd/openvas
+    path: common
   destination:
     server: https://kubernetes.default.svc
     namespace: weakspotter-common
