@@ -3,6 +3,10 @@ kind: Application
 metadata:
   name: weakspotter-common
   namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: >
+      ai-cve-explainer=ghcr.io/weakspotter/ai-cve-explainer:latest
+    argocd-image-updater.argoproj.io/ai-cve-explainer.update-strategy: digest
 spec:
   project: default
   source:
