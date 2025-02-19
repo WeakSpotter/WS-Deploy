@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: weakspotter-common
-  namespace: weakspotter-common
+  namespace: argocd
 spec:
   project: default
   source:
