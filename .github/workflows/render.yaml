@@ -1,0 +1,56 @@
+name: Render Manifests
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  render-manifests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Kustomize
+        run: |
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+          sudo mv kustomize /usr/local/bin/
+
+      - name: Render production manifests
+        run: |
+          kustomize build WeakSpotter-Kub/argocd/production > production-manifests.yaml
+
+      - name: Render common manifests
+        run: |
+          kustomize build WeakSpotter-Kub/argocd/common > common-manifests.yaml
+
+      - name: Upload rendered production manifests as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: production-manifests
+          path: production-manifests.yaml
+
+      - name: Upload rendered common manifests as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: common-manifests
+          path: common-manifests.yaml
+
+      - name: Commit and push rendered production manifests
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b rendered-manifests
+          mv production-manifests.yaml WeakSpotter-Kub/argocd/production/production-manifests.yaml
+          git add WeakSpotter-Kub/argocd/production/production-manifests.yaml
+          git commit -m "Add rendered production manifests"
+
+      - name: Commit and push rendered common manifests
+        run: |
+          mv common-manifests.yaml WeakSpotter-Kub/argocd/common/common-manifests.yaml
+          git add WeakSpotter-Kub/argocd/common/common-manifests.yaml
+          git commit -m "Add rendered common manifests"
+          git push origin rendered-manifests
