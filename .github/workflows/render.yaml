@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Kustomize
         run: |
@@ -28,13 +28,13 @@ jobs:
           kustomize build WeakSpotter-Kub/argocd/common > common-manifests.yaml
 
       - name: Upload rendered production manifests as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: production-manifests
           path: production-manifests.yaml
 
       - name: Upload rendered common manifests as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: common-manifests
           path: common-manifests.yaml
