@@ -25,7 +25,7 @@ jobs:
 
       - name: Render common manifests
         run: |
-          kustomize build argocd/common > common-manifests.yaml
+          kustomize build common > common-manifests.yaml
 
       - name: Upload rendered production manifests as artifact
         uses: actions/upload-artifact@v4
