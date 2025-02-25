@@ -1,0 +1,166 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: weakspotter-service-account
+  namespace: weakspotter-production
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: weakspotter-role
+  namespace: weakspotter-production
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/status
+  - pods/log
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: weakspotter-role-binding
+  namespace: weakspotter-production
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: weakspotter-role
+subjects:
+- kind: ServiceAccount
+  name: weakspotter-service-account
+  namespace: weakspotter-production
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: weakspotter-backend
+  namespace: weakspotter-production
+spec:
+  ports:
+  - port: 8000
+    targetPort: 8000
+  selector:
+    app: weakspotter-backend
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: weakspotter-frontend
+  namespace: weakspotter-production
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: weakspotter-frontend
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weakspotter-backend
+  namespace: weakspotter-production
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: weakspotter-backend
+  template:
+    metadata:
+      labels:
+        app: weakspotter-backend
+    spec:
+      containers:
+      - image: ghcr.io/weakspotter/weakspotter-backend:main
+        name: backend
+        ports:
+        - containerPort: 8000
+      serviceAccountName: weakspotter-service-account
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weakspotter-frontend
+  namespace: weakspotter-production
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: weakspotter-frontend
+  template:
+    metadata:
+      labels:
+        app: weakspotter-frontend
+    spec:
+      containers:
+      - env:
+        - name: API_URL
+          value: https://weakspotter.ozeliurs.com/api
+        - name: ENV
+          value: production
+        image: ghcr.io/weakspotter/weakspotter-frontend:main
+        name: frontend
+        ports:
+        - containerPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: cloudflare-dns
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    traefik.ingress.kubernetes.io/router.priority: "100"
+  name: weakspotter-backend-ingress
+  namespace: weakspotter-production
+spec:
+  rules:
+  - host: weakspotter.ozeliurs.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: weakspotter-backend
+            port:
+              number: 8000
+        path: /api
+        pathType: Prefix
+  tls:
+  - hosts:
+    - weakspotter.ozeliurs.com
+    secretName: weakspotter-backend-production-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: cloudflare-dns
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    traefik.ingress.kubernetes.io/router.priority: "1"
+  name: weakspotter-frontend-ingress
+  namespace: weakspotter-production
+spec:
+  rules:
+  - host: weakspotter.ozeliurs.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: weakspotter-frontend
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - weakspotter.ozeliurs.com
+    secretName: weakspotter-frontend-production-tls
