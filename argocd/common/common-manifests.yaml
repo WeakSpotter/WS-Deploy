@@ -1,0 +1,133 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: weakspotter-ai-cve-explainer
+  namespace: weakspotter-common
+spec:
+  ports:
+  - port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: weakspotter-ai-cve-explainer
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: weakspotter-ai-cve-explainer-db
+  namespace: weakspotter-common
+spec:
+  ports:
+  - port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: weakspotter-ai-cve-explainer-db
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weakspotter-ai-cve-explainer
+  namespace: weakspotter-common
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: weakspotter-ai-cve-explainer
+  template:
+    metadata:
+      labels:
+        app: weakspotter-ai-cve-explainer
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_USER
+          value: weakspotter
+        - name: POSTGRES_PASSWORD
+          value: weakspotter
+        - name: POSTGRES_DB
+          value: weakspotter
+        - name: POSTGRES_HOST
+          value: weakspotter-ai-cve-explainer-db.weakspotter-common.svc.cluster.local
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: GROK_API_KEY
+          valueFrom:
+            secretKeyRef:
+              key: groq-api-key
+              name: ai-cve-explainer-secret
+        - name: API_KEY_NAME
+          value: Authorization
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              key: api-key
+              name: ai-cve-explainer-secret
+        image: ghcr.io/weakspotter/ai-cve-explainer
+        name: ai-cve-explainer
+        ports:
+        - containerPort: 9000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weakspotter-ai-cve-explainer-db
+  namespace: weakspotter-common
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: weakspotter-ai-cve-explainer-db
+  template:
+    metadata:
+      labels:
+        app: weakspotter-ai-cve-explainer-db
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DB
+          value: weakspotter
+        - name: POSTGRES_USER
+          value: weakspotter
+        - name: POSTGRES_PASSWORD
+          value: weakspotter
+        image: postgres:14
+        name: ai-cve-explainer-db
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-data
+      volumes:
+      - emptyDir: {}
+        name: postgres-data
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: cloudflare-dns
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  name: weakspotter-ai-cve-explainer-ingress
+  namespace: weakspotter-common
+spec:
+  rules:
+  - host: ai-cve.weakspotter.ozeliurs.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: weakspotter-ai-cve-explainer
+            port:
+              number: 9000
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - ai-cve.weakspotter.ozeliurs.com
+    secretName: weakspotter-ai-cve-tls
