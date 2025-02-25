@@ -21,11 +21,11 @@ jobs:
 
       - name: Render production manifests
         run: |
-          kustomize build WeakSpotter-Kub/argocd/production > production-manifests.yaml
+          kustomize build argocd/production > production-manifests.yaml
 
       - name: Render common manifests
         run: |
-          kustomize build WeakSpotter-Kub/argocd/common > common-manifests.yaml
+          kustomize build argocd/common > common-manifests.yaml
 
       - name: Upload rendered production manifests as artifact
         uses: actions/upload-artifact@v4
@@ -44,13 +44,13 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b rendered-manifests
-          mv production-manifests.yaml WeakSpotter-Kub/argocd/production/production-manifests.yaml
-          git add WeakSpotter-Kub/argocd/production/production-manifests.yaml
+          mv production-manifests.yaml argocd/production/production-manifests.yaml
+          git add argocd/production/production-manifests.yaml
           git commit -m "Add rendered production manifests"
 
       - name: Commit and push rendered common manifests
         run: |
-          mv common-manifests.yaml WeakSpotter-Kub/argocd/common/common-manifests.yaml
-          git add WeakSpotter-Kub/argocd/common/common-manifests.yaml
+          mv common-manifests.yaml argocd/common/common-manifests.yaml
+          git add argocd/common/common-manifests.yaml
           git commit -m "Add rendered common manifests"
           git push origin rendered-manifests
